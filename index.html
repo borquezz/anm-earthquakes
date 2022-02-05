@@ -4,11 +4,26 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css" />
     <title>Earthquakes</title>
   </head>
   <body>
     <div id="test"></div>
+    <div id="map"></div>
+    <div>
+      <input id="address" type="textbox" value="Sydney, NSW" />
+      <input
+        type="button"
+        value="Encode"
+        onclick="mapController().codeAddress()"
+      />
+    </div>
 
     <script type="module" src="geonames.js"></script>
+    <script src="mapController.js"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=mapController&v=weekly"
+      async
+    ></script>
   </body>
 </html>
