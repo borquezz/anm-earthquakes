@@ -15,19 +15,26 @@ export class GoogleMap {
       east: null,
       west: null,
     };
+    // Array to keep markers & circles restricted to 10
+    this.markers = [];
+    this.circles = [];
   }
 
   // Add a marker to the map, with its respective information label
-  addMarker(coords, magnitude, title) {
+  addMarker(coords, magnitude, datetime) {
     // The information label, to pop when marker is clicked
     const infoWindow = new google.maps.InfoWindow();
+    const title = `Date: ${datetime.substring(
+      0,
+      10
+    )}<br/>Time: ${datetime.substring(11)}<br/>Magnitude: ${String(magnitude)}`;
     // The marker itself
     const marker = new google.maps.Marker({
       // Passing the attributes
       position: coords,
       map: this.map,
       label: String(magnitude),
-      title: "Date: 2011-03-11<br/>Time: 04:46<br/>Magnitude: 8.8",
+      title: title,
       optimized: false,
     });
 
@@ -37,6 +44,15 @@ export class GoogleMap {
       infoWindow.setContent(marker.getTitle());
       infoWindow.open(marker.getMap(), marker);
     });
+    // Push the marker into the markers array
+    this.markers.push(marker);
+    // If there are more than 10 markers, delete the last of them
+    if (this.markers.length > 10) {
+      // This deletes and returns the first element from markers array
+      let deleted = this.markers.shift();
+      // To actually delete it from the map, we assign the marker's map to null
+      deleted.setMap(null);
+    }
   }
 
   // DEV-ONLY: Draws a rectangle given a certain bounding box
@@ -69,6 +85,15 @@ export class GoogleMap {
       center: coords,
       radius: Math.sqrt(magnitude) * 2000,
     });
+    // Push the circle into the circles array
+    this.circles.push(cityCircle);
+    // If there are more than 10 circles, delete the last of them
+    if (this.circles.length > 10) {
+      // This deletes and returns the first element from circles array
+      let deleted = this.circles.shift();
+      // To actually delete it from the map, we assign the circle's map to null
+      deleted.setMap(null);
+    }
   }
 
   // To run after geoCode method. Updates the class instance to the new location obtained in geoCode method

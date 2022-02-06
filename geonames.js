@@ -33,7 +33,8 @@ document.getElementById("submit").addEventListener("click", async function () {
       );
       map.addMarker(
         { lat: location.lat, lng: location.lng },
-        location.magnitude
+        location.magnitude,
+        location.datetime
       );
     });
   }
