@@ -6,24 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/style.css" />
     <title>Earthquakes</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
     <div id="test"></div>
     <div id="map"></div>
     <div>
       <input id="address" type="textbox" value="Sydney, NSW" />
-      <input
-        type="button"
-        value="Encode"
-        onclick="mapController().codeAddress()"
-      />
+      <input id="submit" type="button" value="Encode" onclick="" />
     </div>
 
+    <script type="module" src="map.js"></script>
     <script type="module" src="geonames.js"></script>
-    <script src="mapController.js"></script>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=mapController&v=weekly"
-      async
-    ></script>
   </body>
 </html>
