@@ -5,7 +5,8 @@ export class GoogleMap {
     this.center = center;
     this.map = new google.maps.Map(document.getElementById("map"), {
       center: this.center,
-      zoom: 9,
+      //   zoom: 9,
+      zoom: 0,
     });
     // Initializing geocoder and bounds object to keep track of the current location bounding box
     this.geocoder = new google.maps.Geocoder();
@@ -18,6 +19,8 @@ export class GoogleMap {
     // Array to keep markers & circles restricted to 10
     this.markers = [];
     this.circles = [];
+    // History of searched places
+    this.history = [];
   }
 
   // Add a marker to the map, with its respective information label
@@ -119,6 +122,7 @@ export class GoogleMap {
   // Reads the address in text input and returns lat, lng and bounding box, amongst other data
   geoCode() {
     let address = document.getElementById("address").value;
+    this.history.push(address);
     return this.geocoder.geocode(
       { address: address },
       function (results, status) {
