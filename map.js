@@ -37,6 +37,12 @@ export class GoogleMap {
     });
   }
 
+  //Set a new center for the viewport
+  setCenter(coords) {
+    this.map.center = { lat: coords.lat, lng: coords.lng };
+    this.map.setCenter(this.map.center);
+  }
+
   // Add a marker to the map, with its respective information label
   addMarker(coords, magnitude, datetime) {
     // The information label, to pop when marker is clicked

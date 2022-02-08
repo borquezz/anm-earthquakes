@@ -65,6 +65,12 @@ async function searchLocation() {
   }
 }
 
+const stringToHTML = function (str) {
+  var dom = document.createElement("li");
+  dom.innerHTML = str;
+  return dom;
+};
+
 //Initialize a new empty map
 const map = new GoogleMap();
 // Largest Earthquakes with bounding box of the whole world
@@ -73,6 +79,26 @@ const largestEarthquakes = await getLargestEarthquakes({
   south: -85,
   east: 179.999,
   west: -179.999,
+});
+// Display the largest earthquakes on the page
+largestEarthquakes.forEach((eq) => {
+  const element = `<div class="ms-2 me-auto" onclick="window.location='#map';">
+  <div class="fw-bold">Date: ${eq.datetime.substring(0, 10)}</div>
+  Time: ${eq.datetime.substring(11)}
+  <br /><span id="${String(eq.lat)}+${String(eq.lng)}+${String(eq.magnitude)}+${
+    eq.datetime
+  }">Lat: ${eq.lat} Lng: ${eq.lng}</span><br /><a href="#map" id="showInMap"
+    ><span class="badge bg-secondary rounded-pill"
+      >Show in map</span
+    ></a
+  >
+</div>
+<span class="badge bg-primary rounded-pill">${eq.magnitude}</span>`;
+  const listItem = document.createElement("li");
+  listItem.innerHTML = element;
+  listItem.className =
+    "list-group-item d-flex justify-content-between align-items-start rounded-5";
+  document.getElementById("largestEq").appendChild(listItem);
 });
 
 // When submit button is clicked or enter is pressed
@@ -96,6 +122,8 @@ document
     if (earthquakes.length < 1)
       alert(`No earthquakes detected in the selected location`);
     else {
+      // Let the map know we performed a new search to clear previous markers
+      map.newSearch = true;
       // For each earthquake location, add a marker and a circle
       earthquakes.forEach((location) => {
         map.addCircle(
@@ -110,3 +138,23 @@ document
       });
     }
   });
+
+// When one of the largest earthquakes is shown in map
+const items = document.querySelectorAll("li");
+items.forEach((item) => {
+  item.addEventListener("click", async function () {
+    const latLng = item.childNodes[0].childNodes[4].id.split("+");
+    map.newSearch = true;
+    // map.updateAddress({ lat: Number(latLng[0]), lng: Number(latLng[1]) });
+    map.setCenter({ lat: Number(latLng[0]), lng: Number(latLng[1]) });
+    map.addCircle(
+      { lat: Number(latLng[0]), lng: Number(latLng[1]) },
+      Number(latLng[2])
+    );
+    map.addMarker(
+      { lat: Number(latLng[0]), lng: Number(latLng[1]) },
+      Number(latLng[2]),
+      latLng[3]
+    );
+  });
+});
