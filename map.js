@@ -5,8 +5,7 @@ export class GoogleMap {
     this.center = center;
     this.map = new google.maps.Map(document.getElementById("map"), {
       center: this.center,
-      //   zoom: 9,
-      zoom: 0,
+      zoom: 8,
     });
     // Initializing geocoder and bounds object to keep track of the current location bounding box
     this.geocoder = new google.maps.Geocoder();
@@ -21,16 +20,33 @@ export class GoogleMap {
     this.circles = [];
     // History of searched places
     this.history = [];
+    // Flag used to know if a new search has been performed and delete previous markers
+    this.newSearch = false;
+    // Add listener to keep track of the current viewport bounds
+    // in case the user wants to use current viewport's location
+    google.maps.event.addListener(this.map, "idle", () => {
+      let bounds = this.map.getBounds();
+      let ne = bounds.getNorthEast();
+      let sw = bounds.getSouthWest();
+      this.bounds = {
+        north: ne.lat(),
+        south: sw.lat(),
+        east: ne.lng(),
+        west: sw.lng(),
+      };
+    });
   }
 
   // Add a marker to the map, with its respective information label
   addMarker(coords, magnitude, datetime) {
     // The information label, to pop when marker is clicked
     const infoWindow = new google.maps.InfoWindow();
-    const title = `Date: ${datetime.substring(
+    const title = `<h6>Date: ${datetime.substring(
       0,
       10
-    )}<br/>Time: ${datetime.substring(11)}<br/>Magnitude: ${String(magnitude)}`;
+    )}<br/>Time: ${datetime.substring(11)}<br/>Magnitude: ${String(
+      magnitude
+    )}</h6>`;
     // The marker itself
     const marker = new google.maps.Marker({
       // Passing the attributes
@@ -47,15 +63,18 @@ export class GoogleMap {
       infoWindow.setContent(marker.getTitle());
       infoWindow.open(marker.getMap(), marker);
     });
-    // Push the marker into the markers array
-    this.markers.push(marker);
-    // If there are more than 10 markers, delete the last of them
-    if (this.markers.length > 10) {
-      // This deletes and returns the first element from markers array
-      let deleted = this.markers.shift();
-      // To actually delete it from the map, we assign the marker's map to null
-      deleted.setMap(null);
+
+    // If a new search was performed, delete the previous markers
+    if (this.newSearch) {
+      this.markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      this.markers = [];
+      // Reset the newSearch flag
+      this.newSearch = false;
     }
+    // Add the marker to markers array
+    this.markers.push(marker);
   }
 
   // DEV-ONLY: Draws a rectangle given a certain bounding box
@@ -88,15 +107,15 @@ export class GoogleMap {
       center: coords,
       radius: Math.sqrt(magnitude) * 2000,
     });
-    // Push the circle into the circles array
-    this.circles.push(cityCircle);
-    // If there are more than 10 circles, delete the last of them
-    if (this.circles.length > 10) {
-      // This deletes and returns the first element from circles array
-      let deleted = this.circles.shift();
-      // To actually delete it from the map, we assign the circle's map to null
-      deleted.setMap(null);
+    // If a new search was performed, delete the previous circles
+    if (this.newSearch) {
+      this.circles.forEach((circle) => {
+        circle.setMap(null);
+      });
+      this.circles = [];
     }
+    // Add the circle to circles array
+    this.circles.push(cityCircle);
   }
 
   // To run after geoCode method. Updates the class instance to the new location obtained in geoCode method
@@ -123,6 +142,7 @@ export class GoogleMap {
   geoCode() {
     let address = document.getElementById("address").value;
     this.history.push(address);
+    this.newSearch = true;
     return this.geocoder.geocode(
       { address: address },
       function (results, status) {

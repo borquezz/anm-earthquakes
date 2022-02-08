@@ -10,6 +10,7 @@ async function getEarthquakes(bounds) {
   const data = await result.json();
   return data;
 }
+// Get the largest earthquakes in past 12 months
 async function getLargestEarthquakes(bounds) {
   // Format today's date
   let date = new Date().toLocaleDateString("en-GB").split("/").reverse();
@@ -37,24 +38,8 @@ async function getLargestEarthquakes(bounds) {
 
   return eq;
 }
-
-//Initialize a new empty map
-let map = new GoogleMap();
-// Date formatting for request
-// Largest Earthquakes with bounding box of the whole world
-const largestEarthquakes = await getLargestEarthquakes({
-  north: 85,
-  south: -85,
-  east: 179.999,
-  west: -179.999,
-});
-console.log(largestEarthquakes);
-
-// heap.peek();
-// console.log(largestEq);
-
-// When submit button is clicked
-document.getElementById("submit").addEventListener("click", async function () {
+// Get entered location in text input and return its bounding box
+async function searchLocation() {
   // Get the address lat, lng and bounding box from geocode API
   let address = await map.geoCode();
   // Update the map with new location
@@ -78,4 +63,50 @@ document.getElementById("submit").addEventListener("click", async function () {
       );
     });
   }
+}
+
+//Initialize a new empty map
+const map = new GoogleMap();
+// Largest Earthquakes with bounding box of the whole world
+const largestEarthquakes = await getLargestEarthquakes({
+  north: 85,
+  south: -85,
+  east: 179.999,
+  west: -179.999,
 });
+
+// When submit button is clicked or enter is pressed
+// SUBMIT BTN
+document
+  .getElementById("search-addon")
+  .addEventListener("click", searchLocation);
+// ENTER KEY
+document.getElementById("address").addEventListener("keydown", function (e) {
+  if (e.code == "Enter") {
+    searchLocation();
+  }
+});
+// Button to search current loc is presed
+document
+  .getElementById("searchCurrentLoc")
+  .addEventListener("click", async function () {
+    // Call the geonames API with the current loc bounding box
+    const earthquakes = (await getEarthquakes(map.bounds)).earthquakes;
+    // If geonames returns an empty array, alert the user
+    if (earthquakes.length < 1)
+      alert(`No earthquakes detected in the selected location`);
+    else {
+      // For each earthquake location, add a marker and a circle
+      earthquakes.forEach((location) => {
+        map.addCircle(
+          { lat: location.lat, lng: location.lng },
+          location.magnitude
+        );
+        map.addMarker(
+          { lat: location.lat, lng: location.lng },
+          location.magnitude,
+          location.datetime
+        );
+      });
+    }
+  });
