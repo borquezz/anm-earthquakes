@@ -62,14 +62,16 @@ async function searchLocation() {
         location.datetime
       );
     });
+    // Add the searched place saved in history as an option
+    console.log(map.history);
+    let history = document.getElementById("history");
+    map.history.forEach((search) => {
+      let opt = document.createElement("option");
+      opt.setAttribute("value", search);
+      history.appendChild(opt);
+    });
   }
 }
-
-const stringToHTML = function (str) {
-  var dom = document.createElement("li");
-  dom.innerHTML = str;
-  return dom;
-};
 
 //Initialize a new empty map
 const map = new GoogleMap();
@@ -93,7 +95,7 @@ largestEarthquakes.forEach((eq) => {
     ></a
   >
 </div>
-<span class="badge bg-primary rounded-pill">${eq.magnitude}</span>`;
+<span class="badge bg-primary rounded-pill">Magnitude: ${eq.magnitude}</span>`;
   const listItem = document.createElement("li");
   listItem.innerHTML = element;
   listItem.className =
@@ -139,7 +141,7 @@ document
     }
   });
 
-// When one of the largest earthquakes is shown in map
+// When one of the largest earthquakes wants to be shown in map
 const items = document.querySelectorAll("li");
 items.forEach((item) => {
   item.addEventListener("click", async function () {
