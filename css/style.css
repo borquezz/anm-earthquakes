@@ -1,6 +1,7 @@
 body {
   background: #fafafa;
   font-family: "Roboto", sans-serif;
+  color: #425a63;
 }
 
 #main-title {
@@ -42,5 +43,24 @@ body {
 .btn:focus {
   background-color: #0096ef;
   color: #fafafa;
+}
+
+#largestTitle {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+}
+
+li {
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+}
+
+li:hover,
+li:focus {
+  background-color: #0096ef;
+  -webkit-transform: scale(1.02);
+          transform: scale(1.02);
 }
 /*# sourceMappingURL=style.css.map */

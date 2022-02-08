@@ -27,7 +27,6 @@
     <title>Earthquakes</title>
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
   </head>
   <body>
     <!-- Navbar -->
@@ -37,26 +36,26 @@
           <i class="fas fa-globe-americas fa-2x me-3"></i
           ><span id="main-title">GEONAMES EARTHQUAKES</span></a
         >
-        <!-- <i class="fas fa-globe-americas fa-2x"></i>
-        <a class="navbar-brand" href="#">Geonames Earthquakes</a> -->
         <button
           class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target="#navbarText"
-          aria-controls="navbarText"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarText">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active" aria-current="page" href="#map"
+                >Home</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Largest Earthquakes</a>
+              <a class="nav-link" href="#largestEq">Largest Earthquakes</a>
             </li>
           </ul>
         </div>
@@ -84,7 +83,9 @@
               placeholder="Search a place"
               aria-label="Search"
               aria-describedby="search-addon"
+              list="history"
             />
+            <datalist id="history"> </datalist>
             <span class="input-group-text border-0" id="search-addon">
               <i class="fas fa-search"></i>
             </span>
@@ -97,6 +98,21 @@
               Search this location
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Largest Earthquakes -->
+    <div class="container my-3">
+      <div class="row">
+        <div class="col text-center" id="largestTitle">
+          <h5 id="largestTitle">LARGEST EARTHQUAKES AROUND THE WORLD</h5>
+          <h6>(PAST 12 MONTHS)</h6>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <ul class="list-group list-group-numbered" id="largestEq"></ul>
         </div>
       </div>
     </div>
