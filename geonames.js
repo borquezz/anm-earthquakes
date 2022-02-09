@@ -4,7 +4,7 @@ import { maxHeap } from "./maxHeap.js";
 // Async function to call the geonames API (earthquakes)
 async function getEarthquakes(bounds) {
   const result = await fetch(
-    `http://api.geonames.org/earthquakesJSON?north=${bounds.north}&south=${bounds.south}&east=${bounds.east}&west=${bounds.west}&lang=en&username=reinier`
+    `https://secure.geonames.org/earthquakesJSON?north=${bounds.north}&south=${bounds.south}&east=${bounds.east}&west=${bounds.west}&lang=en&username=reinier`
   );
 
   const data = await result.json();
@@ -20,7 +20,7 @@ async function getLargestEarthquakes(bounds) {
   const minMagnitude = 5.7; // Tuning slider for opt results
   const maxRows = 500;
   const result = await fetch(
-    `http://api.geonames.org/earthquakesJSON?north=${bounds.north}&south=${bounds.south}&east=${bounds.east}&west=${bounds.west}&date=${date}&maxRows=${maxRows}&minMagnitude=${minMagnitude}&lang=en&username=reinier`
+    `https://secure.geonames.org/earthquakesJSON?north=${bounds.north}&south=${bounds.south}&east=${bounds.east}&west=${bounds.west}&date=${date}&maxRows=${maxRows}&minMagnitude=${minMagnitude}&lang=en&username=reinier`
   );
 
   const data = (await result.json()).earthquakes;
